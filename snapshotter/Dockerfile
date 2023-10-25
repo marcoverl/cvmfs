@@ -31,7 +31,7 @@ ARG SNAPSHOTTER_BUILD_FLAGS
 ARG CTR_REMOTE_BUILD_FLAGS
 COPY . $GOPATH/src/github.com/cvmfs/snapshotter
 RUN cd $GOPATH/src/github.com/cvmfs/snapshotter && \
-    PREFIX=/out/ GO_BUILD_FLAGS=${SNAPSHOTTER_BUILD_FLAGS} make
+    PREFIX=/out/ TAG=${GITHUB_REF_NAME} GO_BUILD_FLAGS=${SNAPSHOTTER_BUILD_FLAGS} make
 
 # Image which can be used as a node image for KinD
 FROM kindest/node:v1.27.1
