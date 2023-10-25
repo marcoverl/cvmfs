@@ -1,9 +1,10 @@
 PREFIX ?= out/
+TAG = $(git describe --tags --abbrev=0)
 
 all: cvmfs_snapshotter
 
 cvmfs_snapshotter: 
-	go build -o $(PREFIX)$@ -ldflags '-X main.version=${CernVM-FS_VERSION_STRING}'
+	go build -o $(PREFIX)$@ -ldflags '-X main.version=$(TAG)'
 
 release: cvmfs_snapshotter
 	mkdir -p release/usr/local/bin
