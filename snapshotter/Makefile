@@ -1,5 +1,5 @@
 PREFIX ?= out/
-TAG=$(grep CVMFS_VERSION ../CMakeLists.txt | awk '{print $3}')
+TAG=$(grep CVMFS_VERSION ../../CMakeLists.txt | awk '{print $3}')
 
 all: cvmfs_snapshotter
 
