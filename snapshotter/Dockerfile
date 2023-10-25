@@ -30,8 +30,9 @@ FROM golang-base AS snapshotter-dev
 ARG SNAPSHOTTER_BUILD_FLAGS
 ARG CTR_REMOTE_BUILD_FLAGS
 COPY . $GOPATH/src/github.com/cvmfs/snapshotter
+COPY ../CMakeLists.txt $GOPATH/src/github.com/cvmfs/snapshotter
 RUN cd $GOPATH/src/github.com/cvmfs/snapshotter && \
-    PREFIX=/out/ TAG=$(grep CVMFS_VERSION ../CMakeLists.txt | awk '{print $3}') GO_BUILD_FLAGS=${SNAPSHOTTER_BUILD_FLAGS} make
+    PREFIX=/out/ TAG=$(grep CVMFS_VERSION CMakeLists.txt | awk '{print $3}') GO_BUILD_FLAGS=${SNAPSHOTTER_BUILD_FLAGS} make
 
 # Image which can be used as a node image for KinD
 FROM kindest/node:v1.27.1
