@@ -1,5 +1,5 @@
 PREFIX ?= out/
-TAG = $(git describe --tags --abbrev=0)
+TAG ?= tag
 
 all: cvmfs_snapshotter
 
