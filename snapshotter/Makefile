@@ -4,7 +4,7 @@ TAG ?= 2.11
 all: cvmfs_snapshotter
 
 cvmfs_snapshotter:         
-	go build -o $(PREFIX)$@ -ldflags '-X main.version=$(TAG)'
+	go build -o $(PREFIX)$@ -ldflags '-X main.Version=$(TAG)'
 
 release: cvmfs_snapshotter
 	mkdir -p release/usr/local/bin
