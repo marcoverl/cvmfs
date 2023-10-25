@@ -1,4 +1,5 @@
 PREFIX ?= out/
+TAG ?= tag
 
 all: cvmfs_snapshotter
 
