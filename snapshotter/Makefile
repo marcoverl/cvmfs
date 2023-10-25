@@ -3,7 +3,7 @@ PREFIX ?= out/
 all: cvmfs_snapshotter
 
 cvmfs_snapshotter: 
-	go build -o $(PREFIX)$@ -ldflags "-X main.version=$env:BRANCH_NAME"
+	go build -o $(PREFIX)$@ -ldflags "-X main.version=${env:BRANCH_NAME}"
 
 release: cvmfs_snapshotter
 	mkdir -p release/usr/local/bin
