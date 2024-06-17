@@ -12,9 +12,9 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-ARG CONTAINERD_VERSION=v1.7.3
-
-FROM golang:1.20.4-bullseye AS golang-base
+ARG CONTAINERD_VERSION=v2.0.0-rc.2
+#ARG CONTAINERD_VERSION=v1.7.18
+FROM golang:1.22.4-bullseye AS golang-base
 
 # Build containerd
 FROM golang-base AS containerd-dev
@@ -34,11 +34,13 @@ RUN cd $GOPATH/src/github.com/cvmfs/snapshotter && \
     PREFIX=/out/ GO_BUILD_FLAGS=${SNAPSHOTTER_BUILD_FLAGS} make
 
 # Image which can be used as a node image for KinD
-FROM kindest/node:v1.27.1
-COPY --from=containerd-dev /out/usr/local/bin/containerd /out/usr/local/bin/containerd-shim-runc-v2 /usr/local/bin/
+FROM kindest/node:v1.30.0
+COPY --from=containerd-dev /out/usr/local/bin/containerd /out/usr/local/bin/containerd-shim-runc-v2 /out/usr/local/bin/ctr /usr/local/bin/
 COPY --from=snapshotter-dev /out/* /usr/local/bin/
-COPY ./script/config/ /
-RUN apt-get update -y && apt-get install --no-install-recommends -y fuse3 wget && \
+COPY ./script/config /
+RUN echo 'repository = "unpacked.infn.it"' >> /etc/containerd-cvmfs-grpc/config.toml
+RUN apt-get update -y && apt-get install --no-install-recommends -y wget && \
     systemctl enable cvmfs-snapshotter && chmod +x /usr/local/bin/kind-entrypoint.sh && \
-    wget -nv -qO- https://github.com/containerd/nerdctl/releases/download/v1.4.0/nerdctl-1.4.0-linux-amd64.tar.gz | tar -C /usr/local/bin -zx
+    wget -nv -qO- https://github.com/containerd/nerdctl/releases/download/v1.7.6/nerdctl-1.7.6-linux-amd64.tar.gz | tar -C /usr/local/bin -zx && \
+    wget -nv -qO- https://github.com/containernetworking/plugins/releases/download/v1.5.0/cni-plugins-linux-amd64-v1.5.0.tgz | tar -C /opt/cni/bin -zx
 ENTRYPOINT [ "/usr/local/bin/kind-entrypoint.sh", "/usr/local/bin/entrypoint", "/sbin/init" ]
